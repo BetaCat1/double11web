@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+    <style>
+        body {
+            background: url('double.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        .required::before {
+            content: '*';
+            color: red;
+            margin-right: 5px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .button-wrapper {
+            text-align: center;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        input[type="submit"]:hover {
+            background-color: #ff8533;
+        }
+        #submitError {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>用户注册</h2>
+        <form id="registerForm">
+            <label for="name" class="required">姓名</label>
+            <input type="text" id="name" name="name">
+            <div class="error-message" id="nameError"></div>
+
+            <label for="address" class="required">收货地址</label>
+            <input type="text" id="address" name="address">
+            <div class="error-message" id="addressError"></div>
+
+            <label for="phone" class="required">手机号</label>
+            <input type="text" id="phone" name="phone">
+            <div class="error-message" id="phoneError"></div>
+
+            <label for="zipcode">邮政编码</label>
+            <input type="text" id="zipcode" name="zipcode">
+            <div class="error-message" id="zipcodeError"></div>
+
+            <div class="button-wrapper">
+                <input type="submit" value="注册">
+            </div>
+        </form>
+        <div id="submitError"></div>
+    </div>
+
+    <!-- 引入 jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#registerForm").submit(function(event) {
+                event.preventDefault();  // 阻止表单的默认提交行为
+
+                // 验证表单
+                if (validateForm()) {
+                    // 收集表单数据
+                    var formData = {
+                        name: $("#name").val(),
+                        address: $("#address").val(),
+                        phone: $("#phone").val(),
+                        zipcode: $("#zipcode").val()
+                    };
+
+                    console.log("Sending data:", formData);  // 打印发送的数据
+
+                    // 发起 AJAX 请求
+                    $.ajax({
+                        url: "http://127.0.0.1:8888/show/act",  // 后端接口地址
+                        type: "POST",
+                        contentType: "application/json",  // 指定请求头
+                        data: JSON.stringify(formData),   // 转换成 JSON 字符串
+                        success: function(response) {
+                            alert("注册成功");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error:", xhr.responseText);
+                            $("#submitError").text("注册失败，请稍后再试");
+                        }
+                    });
+                }
+            });
+
+            // 表单验证逻辑
+            function validateForm() {
+                var isValid = true;
+                $(".error-message").text("");  // 清空之前的错误信息
+
+                // 验证姓名
+                if ($("#name").val().trim() === "") {
+                    $("#nameError").text("姓名为必填项");
+                    isValid = false;
+                }
+
+                // 验证收货地址
+                if ($("#address").val().trim() === "") {
+                    $("#addressError").text("收货地址为必填项");
+                    isValid = false;
+                }
+
+                // 验证手机号
+                if ($("#phone").val().trim() === "") {
+                    $("#phoneError").text("手机号为必填项");
+                    isValid = false;
+                } else if (!/^\d{11}$/.test($("#phone").val())) {
+                    $("#phoneError").text("请输入正确的11位手机号");
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+        });
+    </script>
+
+</body>
+</html>
