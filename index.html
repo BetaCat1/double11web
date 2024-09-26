@@ -6,7 +6,7 @@
     <title>天猫双11抽奖活动</title>
     <style>
         body {
-            background: url('./img/2.jpg') no-repeat center center fixed;
+            background: url('./img/3.jpg') no-repeat center center fixed;
             background-size: cover;
             font-family: Arial, sans-serif;
         }
@@ -72,6 +72,15 @@
             margin-top: -10px;
             margin-bottom: 10px;
             width: 90%; /* 适应宽度 */
+        }
+
+        .success-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            width: 90%; /* 适应宽度 */
+            text-align: center;
         }
 
         .button-wrapper {
@@ -163,11 +172,13 @@
             <div class="button-wrapper">
                 <input type="submit" value="参与活动">
             </div>
+            <br>
+            <div class="success-message" id="response"></div>
         </form>
         <div id="submitError"></div>
 
         <div class="instructions">
-            一、抽奖活动：<br>
+            一、抽奖条件：<br>
             1、本次活动需由淘宝账户对应绑定手机号报名参与;<br>
             2、同一手机号不可重复报名;<br>
             
@@ -220,12 +231,17 @@
 
                     // 发起 AJAX 请求
                     $.ajax({
-                        url: "http://114.55.119.137:8888/show/act",  // 后端接口地址
+                        url: "http://209.141.47.146/show/act",  // 后端接口地址
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify(formData),
                         success: function(response) {
                             alert(response);
+                            if(response=="报名成功"){
+                                $("#response").text("报名成功,抽奖活动请参考以下“具体流程”");
+                            }else{
+                                $("#response").text("");
+                            }
                             clear()
                         },
                         error: function(xhr, status, error) {

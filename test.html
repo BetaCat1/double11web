@@ -108,6 +108,33 @@
             line-height: 1.5;
         }
 
+        .prize-message {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* 渐变背景 */
+  color: white; /* 字体颜色 */
+  padding: 15px 30px; /* 内边距 */
+  border-radius: 25px; /* 圆角 */
+  font-family: 'Arial', sans-serif; /* 字体 */
+  font-size: 1.5em; /* 字体大小 */
+  text-align: center; /* 居中对齐 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 阴影 */
+  max-width: 400px; /* 最大宽度 */
+  margin: 50px auto; /* 居中布局 */
+  animation: pulse 2s infinite; /* 动画效果 */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
         /* 响应式调整 */
         @media (max-width: 600px) {
             .container {
@@ -129,123 +156,16 @@
     </style>
 </head>
 <body>
+<br>
+<br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <div class="container">
-        <h2>报名入口</h2>
-        <form id="registerForm">
-            <div class="input-wrapper">
-                <input type="text" id="name" name="name" placeholder="请输入姓名">
-            </div>
-            <div class="error-message" id="nameError"></div>
+    <div class="prize-message">
+        奖品已领完，敬请下次参与
+      </div>
+      
 
-            <div class="input-wrapper">
-                <input type="text" id="address" name="address" placeholder="请输入收货地址">
-            </div>
-            <div class="error-message" id="addressError"></div>
-
-            <div class="input-wrapper">
-                <input type="text" id="phone" name="phone" placeholder="请输入手机号">
-            </div>
-            <div class="error-message" id="phoneError"></div>
-
-            <div class="input-wrapper-sub">
-                <input type="text" id="zipcode" name="zipcode" placeholder="请输入邮政编码">
-            </div>
-            <div class="error-message" id="zipcodeError"></div>
-
-            <div class="button-wrapper">
-                <input type="submit" value="参与活动">
-            </div>
-        </form>
-        <div id="submitError"></div>
-
-        <div class="instructions">
-            一、抽奖宗旨：<br>
-            1、本次抽奖采取“机会均等、永不落空”制;<br>
-            2、相关领导、嘉宾及员工(优秀员工)抽取;<br>
-            3、本次抽奖现场抽取“特等奖”至“三等奖”共8名。<br>
-            <br>
-            二、抽奖条件：<br>
-            1、凡庆典当天到场参加晚会活动的英唐员工均可凭抽奖卷参加抽奖;<br>
-            2、抽奖从最低奖项开始抽起;<br>
-            3、中奖奖票抽中后不再投入抽奖箱中;<br>
-            4、凡持有抽奖券的人员，请将兑奖正券在庆典晚会开始前投入抽奖箱中。<br>
-            <br>
-            三、奖项设置：<br>
-            <br>
-            四、具体流程：<br>
-            1. 庆典前一天(10月18日)公司将抽奖券发至每名员工手中，保留抽奖券发放登记资料以备查;<br>
-            2. 庆典活动当天在会场入口处设置抽奖箱，入场人员将抽奖卷副卷按虚线撕下保留，将抽奖卷投入抽奖箱;<br>
-            3. 庆典晚会中由现场嘉宾进行幸运抽奖，依次按晚会流程安排顺序从三等奖开始至特等奖;<br>
-            4. 员工凭副卷兑奖现场领取奖品;<br>
-            5. 抽奖活动中中奖员工合影。
-        </div>
-    </div>
-
-    <!-- 引入 jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $("#registerForm").submit(function(event) {
-                event.preventDefault();  // 阻止表单的默认提交行为
-
-                // 验证表单
-                if (validateForm()) {
-                    // 收集表单数据
-                    var formData = {
-                        name: $("#name").val(),
-                        address: $("#address").val(),
-                        phone: $("#phone").val(),
-                        zipcode: $("#zipcode").val()
-                    };
-
-                    // 发起 AJAX 请求
-                    $.ajax({
-                        url: "http://192.168.1.2:8888/show/act",  // 后端接口地址
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(formData),
-                        success: function(response) {
-                            alert(response);
-                        },
-                        error: function(xhr, status, error) {
-                            alert(response);
-                        }
-                    });
-                }
-            });
-
-            // 表单验证逻辑
-            function validateForm() {
-                var isValid = true;
-                $(".error-message").text("");  // 清空之前的错误信息
-
-                // 验证姓名
-                if ($("#name").val().trim() === "") {
-                    $("#nameError").text("姓名为必填项");
-                    isValid = false;
-                }
-
-                // 验证收货地址
-                if ($("#address").val().trim() === "") {
-                    $("#addressError").text("收货地址为必填项");
-                    isValid = false;
-                }
-
-                // 验证手机号
-                if ($("#phone").val().trim() === "") {
-                    $("#phoneError").text("手机号为必填项");
-                    isValid = false;
-                } else if (!/^\d{11}$/.test($("#phone").val())) {
-                    $("#phoneError").text("请输入正确的11位手机号");
-                    isValid = false;
-                }
-
-                return isValid;
-            }
-        });
-    </script>
+    
 
 </body>
 </html>
